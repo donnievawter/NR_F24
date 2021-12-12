@@ -1,0 +1,66 @@
+[
+    {
+        "id": "86234d68f0551624",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "468add020484d2cc",
+        "type": "tcp in",
+        "z": "86234d68f0551624",
+        "name": "",
+        "server": "client",
+        "host": "192.168.0.112",
+        "port": "30003",
+        "datamode": "stream",
+        "datatype": "utf8",
+        "newline": "",
+        "topic": "",
+        "base64": false,
+        "x": 740,
+        "y": 380,
+        "wires": [
+            [
+                "46899c15ba4a191d"
+            ]
+        ]
+    },
+    {
+        "id": "06098624bb31532e",
+        "type": "debug",
+        "z": "86234d68f0551624",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1550,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "46899c15ba4a191d",
+        "type": "function",
+        "z": "86234d68f0551624",
+        "name": "",
+        "func": "const choices=[\"MSG\",\"SEL\",\"ID\",\"AIR\",\"STA\",\"CLK\"];\nconst onlyUnique= (value, index, self)=> self.indexOf(value) === index;\nlet b=msg.payload.split(\"\\n\");\nfor ( const element of b){\n  let a=element.split(\",\");\n  let types=global.get(\"types\")||[];\n  if(choices.indexOf(a[0])>=0) {\n  types.push(a[0]);\n  }\n  let unique=types.filter(onlyUnique);\n  global.set(\"types\",unique);\n  if(a[0]===\"MSG\"){\n    let mtypes=global.get(\"mtypes\")||[];\n    mtypes.push(a[1]);\n    let unm=mtypes.filter(onlyUnique);\n    global.set(\"mtypes\",unm);\n  }0\n}\nmsg.payload=b.length;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1020,
+        "y": 420,
+        "wires": [
+            [
+                "06098624bb31532e"
+            ]
+        ]
+    }
+]

@@ -1,13 +1,8 @@
 {
-    "name": "NR_F24",
-    "description": "A Node-RED Project",
-    "version": "0.0.1",
-    "dependencies": {
-       
-    },
     "node-red": {
         "settings": {
-            "flowFile": "f24_flows.json",
-            "credentialsFile": "f24_flows_cred.json"
+            "flowFile": "ff24_lows.json",
+            "credentialsFile": "ff24_lows_cred.json"
         }
     }
+}
