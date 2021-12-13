@@ -8,6 +8,19 @@
         "env": []
     },
     {
+        "id": "08e70aa346915575",
+        "type": "server",
+        "name": "Home Assistant",
+        "version": 2,
+        "addon": false,
+        "rejectUnauthorizedCerts": true,
+        "ha_boolean": "y|yes|true|on|home|open",
+        "connectionDelay": true,
+        "cacheJson": true,
+        "heartbeat": false,
+        "heartbeatInterval": "30"
+    },
+    {
         "id": "468add020484d2cc",
         "type": "tcp in",
         "z": "86234d68f0551624",
@@ -20,8 +33,8 @@
         "newline": "",
         "topic": "",
         "base64": false,
-        "x": 740,
-        "y": 380,
+        "x": 730,
+        "y": 400,
         "wires": [
             [
                 "46899c15ba4a191d"
@@ -33,7 +46,7 @@
         "type": "debug",
         "z": "86234d68f0551624",
         "name": "",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -49,7 +62,7 @@
         "type": "function",
         "z": "86234d68f0551624",
         "name": "",
-        "func": "const choices=[\"MSG\",\"SEL\",\"ID\",\"AIR\",\"STA\",\"CLK\"];\nconst onlyUnique= (value, index, self)=> self.indexOf(value) === index;\nlet b=msg.payload.split(\"\\n\");\nfor ( const element of b){\n  let a=element.split(\",\");\n  let types=global.get(\"types\")||[];\n  if(choices.indexOf(a[0])>=0) {\n  types.push(a[0]);\n  }\n  let unique=types.filter(onlyUnique);\n  global.set(\"types\",unique);\n  if(a[0]===\"MSG\"){\n    let mtypes=global.get(\"mtypes\")||[];\n    mtypes.push(a[1]);\n    let unm=mtypes.filter(onlyUnique);\n    global.set(\"mtypes\",unm);\n  }0\n}\nmsg.payload=b.length;\nreturn msg;",
+        "func": "const choices=[\"MSG\",\"SEL\",\"ID\",\"AIR\",\"STA\",\"CLK\"];\nconst counts ={\n    \"MSG\":0,\n    \"SEL\":0,\n    \"ID\":0,\n    \"AIR\":0,\n    \"STA\":0,\n    \"CLK\":0\n}\nlet st=[];\nconst status= {\n          }\n    \nlet newPayload=\"\";\nlet accum=global.get(\"counts\")||counts;\nmsg.data=[];\nconst onlyUnique= (value, index, self)=> self.indexOf(value) === index;\nlet b=msg.payload.split(\"\\n\");\nfor ( const element of b){\n  msg.data.push(element);\n  let a=element.split(\",\");\n\n  let types=global.get(\"types\")||[];\n  if(choices.indexOf(a[0])>=0) {\n    types.push(a[0]);\n    accum[a[0]]++;\n    global.set(\"counts\",accum);\n  }\n  let unique=types.filter(onlyUnique);\n  global.set(\"types\",unique);\n  if(a[0]===\"MSG\"){\n    let mtypes=global.get(\"mtypes\")||[];\n    mtypes.push(a[1]);\n    let unm=mtypes.filter(onlyUnique);\n    global.set(\"mtypes\",unm);\n  }\n  if(a[0]===\"STA\"){\n      let stat=global.get(\"status\")||status;\n     if(stat[a[10]]){\n          stat[a[10]]++;\n     }else{\n         stat[a[10]]=1\n     }\n    global.set(\"status\",stat)\n    newPayload=element;\n  }\n   if((a[0]===\"ID\")||(a[0]==='ID')||(a[0]==='AIR')){\n    newPayload=element;\n       \n   }\n   if(a[0]===\"ID\"){\n       let aircraft=global.get(\"aircraft\")||[];\n       aircraft.push(a[4]);\n       let ac=aircraft.filter(onlyUnique);\n       global.set(\"aircraft\",ac);\n       newPayload=\"found >\"+a[4]+\"< \"+ a.length+\" \" + a;\n   }\n   if((a[0]===\"STA\") ){\n       let aircraft=global.get(\"aircraft\")||[];\n       newPayload=a[4];\n       let i=aircraft.indexOf(a[4]);\n       if(i>=0){\n           let removed=global.get(\"removed\")||[];\n           removed.push(a[4]);\n           global.set(\"removed\",removed);\n           aircraft.splice(i,1);\n           global.set(\"aircraft\",aircraft);\n           newPayload=a[4]+\" removed \"+aircraft.length +\" remaining\";\n       }else{\n           newPayload=\">\"+a[4]+\"< not found with STA of >\"+a[10]+\"<\"+a;\n       }\n   }\n}\nmsg.payload=newPayload;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -59,7 +72,188 @@
         "y": 420,
         "wires": [
             [
+                "443558f94c7cf2e1"
+            ]
+        ]
+    },
+    {
+        "id": "443558f94c7cf2e1",
+        "type": "switch",
+        "z": "86234d68f0551624",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "empty"
+            },
+            {
+                "t": "regex",
+                "v": "(.)*found(.)*",
+                "vt": "str",
+                "case": true
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1270,
+        "y": 460,
+        "wires": [
+            [
+                "b0d0fa6ebb5a5201"
+            ],
+            [
                 "06098624bb31532e"
+            ]
+        ]
+    },
+    {
+        "id": "b0d0fa6ebb5a5201",
+        "type": "debug",
+        "z": "86234d68f0551624",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1340,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "365132b6c7a63359",
+        "type": "catch",
+        "z": "86234d68f0551624",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 1010,
+        "y": 620,
+        "wires": [
+            [
+                "d4a9d0d7ff732471"
+            ]
+        ]
+    },
+    {
+        "id": "d4a9d0d7ff732471",
+        "type": "debug",
+        "z": "86234d68f0551624",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "76700d7db1da7d87",
+        "type": "ha-entity",
+        "z": "86234d68f0551624",
+        "name": "F24Tracked",
+        "server": "08e70aa346915575",
+        "version": 1,
+        "debugenabled": false,
+        "outputs": 1,
+        "entityType": "sensor",
+        "config": [
+            {
+                "property": "name",
+                "value": "f24"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": "mdi:airplane"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": ""
+            }
+        ],
+        "state": "aircraft.length",
+        "stateType": "global",
+        "attributes": [],
+        "resend": true,
+        "outputLocation": "payload",
+        "outputLocationType": "none",
+        "inputOverride": "allow",
+        "outputOnStateChange": false,
+        "outputPayload": "$entity().state ? \"on\": \"off\"",
+        "outputPayloadType": "jsonata",
+        "x": 1050,
+        "y": 880,
+        "wires": [
+            [
+                "921b980860da849b"
+            ]
+        ]
+    },
+    {
+        "id": "56b081c1f900419d",
+        "type": "inject",
+        "z": "86234d68f0551624",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 850,
+        "y": 880,
+        "wires": [
+            [
+                "76700d7db1da7d87"
+            ]
+        ]
+    },
+    {
+        "id": "921b980860da849b",
+        "type": "delay",
+        "z": "86234d68f0551624",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1060,
+        "y": 1060,
+        "wires": [
+            [
+                "76700d7db1da7d87"
             ]
         ]
     }
