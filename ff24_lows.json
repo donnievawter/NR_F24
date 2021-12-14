@@ -62,7 +62,7 @@
         "type": "function",
         "z": "86234d68f0551624",
         "name": "",
-        "func": "const choices=[\"MSG\",\"SEL\",\"ID\",\"AIR\",\"STA\",\"CLK\"];\nconst counts ={\n    \"MSG\":0,\n    \"SEL\":0,\n    \"ID\":0,\n    \"AIR\":0,\n    \"STA\":0,\n    \"CLK\":0\n}\nlet st=[];\nconst status= {\n          }\n    \nlet newPayload=\"\";\nlet accum=global.get(\"counts\")||counts;\nmsg.data=[];\nconst onlyUnique= (value, index, self)=> self.indexOf(value) === index;\nlet b=msg.payload.split(\"\\n\");\nfor ( const element of b){\n \n  let a=element.split(\",\");\n\n  let types=global.get(\"types\")||[];\n  if(choices.indexOf(a[0])>=0) {\n    types.push(a[0]);\n    accum[a[0]]++;\n    global.set(\"counts\",accum);\n  }\n  let unique=types.filter(onlyUnique);\n  global.set(\"types\",unique);\n  if(a[0]===\"MSG\"){\n    let mtypes=global.get(\"mtypes\")||[];\n    mtypes.push(a[1]);\n    let unm=mtypes.filter(onlyUnique);\n    global.set(\"mtypes\",unm);\n  }\n  if(a[0]===\"STA\"){\n      let stat=global.get(\"status\")||status;\n     if(stat[a[10]]){\n          stat[a[10]]++;\n     }else{\n         stat[a[10]]=1\n     }\n    global.set(\"status\",stat)\n    newPayload=element;\n  }\n   if((a[0]===\"ID\")||(a[0]==='ID')||(a[0]==='AIR')){\n    newPayload=element;\n       \n   }\n   if(a[0]===\"AIR\"){\n       let aircraft=global.get(\"aircraft\")||[];\n       aircraft.push(a[4]);\n       let ac=aircraft.filter(onlyUnique);\n       global.set(\"aircraft\",ac);\n       newPayload=\"found >\"+a[4]+\"< \"+ a.length+\" \" + a;\n   }\n   if((a[0]===\"STA\") ){\n       let aircraft=global.get(\"aircraft\")||[];\n       newPayload=a[4];\n       let i=aircraft.indexOf(a[4]);\n       if(i>=0){\n           let removed=global.get(\"removed\")||[];\n           removed.push(a[4]);\n           global.set(\"removed\",removed);\n           aircraft.splice(i,1);\n           global.set(\"aircraft\",aircraft);\n           newPayload=a[4]+\" removed \"+aircraft.length +\" remaining\";\n       }else{\n           newPayload=\">\"+a[4]+\"< not found with STA of >\"+a[10]+\"<\"+a;\n       }\n   }\n   if((a[0]===\"MSG\") && (a[1]==3)){\n       let distance=global.get(\"getDistance\",\"file\")(a[14],a[15]);\n       let maxDistance=global.get(\"maxDistance\")||0;\n       let minDistance=global.get(\"minDistance\")||1000000;\n     if(distance>maxDistance){\n         global.set(\"latitude\",a[14]);\n         global.set(\"longitude\",a[15]);\n     }\n     \n       maxDistance=Math.max(maxDistance,distance);\n       minDistance=Math.min(minDistance,distance);\n       global.set(\"maxDistance\",maxDistance);\n       global.set(\"minDistance\",minDistance);\n   }\n   if((a[0]===\"MSG\") && (a[1]==5)){\n       let altitude=a[11];\n       if(altitude<0){\n           altitude=0;\n       }\n       let maxAltitude=global.get(\"maxAltitude\")||0;\n       let minAltitude=global.get(\"minAltitude\")||1000000;\n       maxAltitude=Math.max(maxAltitude,altitude);\n       minAltitude=Math.min(minAltitude,altitude);\n       global.set(\"maxAltitude\",maxAltitude);\n       global.set(\"minAltitude\",minAltitude);\n   }\n}\nmsg.payload=newPayload;\n\nreturn msg;",
+        "func": "const choices=[\"MSG\",\"SEL\",\"ID\",\"AIR\",\"STA\",\"CLK\"];\nconst counts ={\n    \"MSG\":0,\n    \"SEL\":0,\n    \"ID\":0,\n    \"AIR\":0,\n    \"STA\":0,\n    \"CLK\":0\n}\nlet st=[];\nconst status= {\n          }\n    \nlet newPayload=\"\";\nlet accum=global.get(\"counts\")||counts;\nmsg.data=[];\nconst onlyUnique= (value, index, self)=> self.indexOf(value) === index;\nlet b=msg.payload.split(\"\\n\");\nfor ( const element of b){\n \n  let a=element.split(\",\");\n\n  let types=global.get(\"types\")||[];\n  if(choices.indexOf(a[0])>=0) {\n    types.push(a[0]);\n    accum[a[0]]++;\n    global.set(\"counts\",accum);\n  }\n  let unique=types.filter(onlyUnique);\n  global.set(\"types\",unique);\n  if(a[0]===\"MSG\"){\n    let mtypes=global.get(\"mtypes\")||[];\n    mtypes.push(a[1]);\n    let unm=mtypes.filter(onlyUnique);\n    global.set(\"mtypes\",unm);\n  }\n  if(a[0]===\"STA\"){\n      let stat=global.get(\"status\")||status;\n     if(stat[a[10]]){\n          stat[a[10]]++;\n     }else{\n         stat[a[10]]=1\n     }\n    global.set(\"status\",stat)\n    newPayload=element;\n  }\n   if((a[0]===\"ID\")||(a[0]==='ID')||(a[0]==='AIR')){\n    newPayload=element;\n       \n   }\n   if(a[0]===\"AIR\"){\n       let aircraft=global.get(\"aircraft\")||[];\n       aircraft.push(a[4]);\n       let ac=aircraft.filter(onlyUnique);\n       global.set(\"aircraft\",ac);\n       newPayload=\"found >\"+a[4]+\"< \"+ a.length+\" \" + a;\n       let total=global.get(\"totalaircraft\",\"file\")||0;\n       let grandtotal=global.get(\"grandtotalaircraft\",\"file\")||0;\n       total++;\n       grandtotal++;\n       global.set(\"totalaircraft\",total,\"file\");\n       global.set(\"grandtotalaircraft\",grandtotal,\"file\");\n   }\n   if((a[0]===\"STA\") ){\n       let aircraft=global.get(\"aircraft\")||[];\n       newPayload=a[4];\n       let i=aircraft.indexOf(a[4]);\n       if(i>=0){\n           let removed=global.get(\"removed\")||[];\n           removed.push(a[4]);\n           global.set(\"removed\",removed);\n           aircraft.splice(i,1);\n           global.set(\"aircraft\",aircraft);\n           newPayload=a[4]+\" removed \"+aircraft.length +\" remaining\";\n       }else{\n           newPayload=\">\"+a[4]+\"< not found with STA of >\"+a[10]+\"<\"+a;\n       }\n   }\n   if((a[0]===\"MSG\") && (a[1]==3)){\n       let distance=global.get(\"getDistance\",\"file\")(a[14],a[15]);\n       let maxDistance=global.get(\"maxDistance\")||0;\n       let minDistance=global.get(\"minDistance\")||1000000;\n     if(distance>maxDistance){\n         global.set(\"latitude\",a[14]);\n         global.set(\"longitude\",a[15]);\n     }\n     \n       maxDistance=Math.max(maxDistance,distance);\n       minDistance=Math.min(minDistance,distance);\n       global.set(\"maxDistance\",maxDistance);\n       global.set(\"minDistance\",minDistance);\n   }\n   if((a[0]===\"MSG\") && (a[1]==5)){\n       let altitude=a[11];\n       if(altitude<0){\n           altitude=0;\n       }\n       let maxAltitude=global.get(\"maxAltitude\")||0;\n       let minAltitude=global.get(\"minAltitude\")||1000000;\n       maxAltitude=Math.max(maxAltitude,altitude);\n       minAltitude=Math.min(minAltitude,altitude);\n       global.set(\"maxAltitude\",maxAltitude);\n       global.set(\"minAltitude\",minAltitude);\n   }\n}\nmsg.payload=newPayload;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -226,6 +226,16 @@
                 "property": "longitude",
                 "value": "longitude",
                 "valueType": "global"
+            },
+            {
+                "property": "total",
+                "value": "#:(file)::totalaircraft",
+                "valueType": "global"
+            },
+            {
+                "property": "grandtotal",
+                "value": "#:(file)::grandtotalaircraft",
+                "valueType": "global"
             }
         ],
         "resend": true,
@@ -308,8 +318,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 600,
-        "y": 700,
+        "x": 360,
+        "y": 1040,
         "wires": [
             [
                 "663c30326ef2f8a6"
@@ -337,8 +347,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 342,
-        "y": 716,
+        "x": 140,
+        "y": 1040,
         "wires": [
             [
                 "86a3015c5e4be605"
@@ -366,7 +376,7 @@
         "type": "debug",
         "z": "86234d68f0551624",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -374,8 +384,90 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 770,
-        "y": 700,
+        "x": 590,
+        "y": 1000,
         "wires": []
+    },
+    {
+        "id": "d4545b855557ce32",
+        "type": "server-state-changed",
+        "z": "86234d68f0551624",
+        "name": "Reset",
+        "server": "08e70aa346915575",
+        "version": 3,
+        "exposeToHomeAssistant": false,
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "entityidfilter": "input_boolean.reset_f24",
+        "entityidfiltertype": "exact",
+        "outputinitially": false,
+        "state_type": "str",
+        "haltifstate": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "outputs": 1,
+        "output_only_on_state_change": true,
+        "for": 0,
+        "forType": "num",
+        "forUnits": "minutes",
+        "ignorePrevStateNull": true,
+        "ignorePrevStateUnknown": true,
+        "ignorePrevStateUnavailable": true,
+        "ignoreCurrentStateUnknown": true,
+        "ignoreCurrentStateUnavailable": true,
+        "outputProperties": [
+            {
+                "property": "payload",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            },
+            {
+                "property": "data",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "eventData"
+            },
+            {
+                "property": "topic",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "triggerId"
+            }
+        ],
+        "x": 590,
+        "y": 760,
+        "wires": [
+            [
+                "96a3923d49557d91"
+            ]
+        ]
+    },
+    {
+        "id": "96a3923d49557d91",
+        "type": "function",
+        "z": "86234d68f0551624",
+        "name": "",
+        "func": "global.set(\"aircraft\",[]);\nglobal.set(\"counts\",{});\nglobal.set(\"removed\",[]);\nglobal.set(\"latitude\",0);\nglobal.set(\"longitude\",0);\nglobal.set(\"minAltitude\",90000);\nglobal.set(\"maxAltitude\",0);\nglobal.set(\"maxDistance\",0);\nglobal.set(\"minDistance\",50000);\nglobal.set(\"types\",[]);\nglobal.set(\"counts\",undefined);\nglobal.set(\"totalaircraft\",0,\"file\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 760,
+        "wires": [
+            [
+                "76700d7db1da7d87"
+            ]
+        ]
     }
 ]
