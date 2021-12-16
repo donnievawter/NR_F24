@@ -42,27 +42,11 @@
         ]
     },
     {
-        "id": "06098624bb31532e",
-        "type": "debug",
-        "z": "86234d68f0551624",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1550,
-        "y": 380,
-        "wires": []
-    },
-    {
         "id": "46899c15ba4a191d",
         "type": "function",
         "z": "86234d68f0551624",
         "name": "",
-        "func": "const choices=[\"MSG\",\"SEL\",\"ID\",\"AIR\",\"STA\",\"CLK\"];\nconst counts ={\n    \"MSG\":0,\n    \"SEL\":0,\n    \"ID\":0,\n    \"AIR\":0,\n    \"STA\":0,\n    \"CLK\":0\n}\nlet st=[];\nconst status= {\n          }\n    \nlet newPayload=\"\";\nlet accum=global.get(\"counts\")||counts;\nmsg.data=[];\nconst onlyUnique= (value, index, self)=> self.indexOf(value) === index;\nlet b=msg.payload.split(\"\\n\");\nfor ( const element of b){\n \n  let a=element.split(\",\");\n\n  let types=global.get(\"types\")||[];\n  if(choices.indexOf(a[0])>=0) {\n    types.push(a[0]);\n    accum[a[0]]++;\n    global.set(\"counts\",accum);\n  }\n  let unique=types.filter(onlyUnique);\n  global.set(\"types\",unique);\n  if(a[0]===\"MSG\"){\n    let mtypes=global.get(\"mtypes\")||[];\n    mtypes.push(a[1]);\n    let unm=mtypes.filter(onlyUnique);\n    global.set(\"mtypes\",unm);\n  }\n  if(a[0]===\"STA\"){\n      let stat=global.get(\"status\")||status;\n     if(stat[a[10]]){\n          stat[a[10]]++;\n     }else{\n         stat[a[10]]=1\n     }\n    global.set(\"status\",stat)\n    newPayload=element;\n  }\n   if((a[0]===\"ID\")||(a[0]==='ID')||(a[0]==='AIR')){\n    newPayload=element;\n       \n   }\n   if(a[0]===\"AIR\"){\n       let aircraft=global.get(\"aircraft\")||[];\n       aircraft.push(a[4]);\n       let ac=aircraft.filter(onlyUnique);\n       global.set(\"aircraft\",ac);\n       newPayload=\"found >\"+a[4]+\"< \"+ a.length+\" \" + a;\n       let total=global.get(\"totalaircraft\",\"file\")||0;\n       let grandtotal=global.get(\"grandtotalaircraft\",\"file\")||0;\n       total++;\n       grandtotal++;\n       global.set(\"totalaircraft\",total,\"file\");\n       global.set(\"grandtotalaircraft\",grandtotal,\"file\");\n   }\n   if((a[0]===\"STA\") ){\n       let aircraft=global.get(\"aircraft\")||[];\n       newPayload=a[4];\n       let i=aircraft.indexOf(a[4]);\n       if(i>=0){\n           let removed=global.get(\"removed\")||[];\n           removed.push(a[4]);\n           global.set(\"removed\",removed);\n           aircraft.splice(i,1);\n           global.set(\"aircraft\",aircraft);\n           newPayload=a[4]+\" removed \"+aircraft.length +\" remaining\";\n       }else{\n           newPayload=\">\"+a[4]+\"< not found with STA of >\"+a[10]+\"<\"+a;\n       }\n   }\n   if((a[0]===\"MSG\") && (a[1]==3)){\n       let distance=global.get(\"getDistance\",\"file\")(a[14],a[15]);\n       let maxDistance=global.get(\"maxDistance\")||0;\n       let minDistance=global.get(\"minDistance\")||1000000;\n     if(distance>maxDistance){\n         global.set(\"latitude\",a[14]);\n         global.set(\"longitude\",a[15]);\n     }\n     \n       maxDistance=Math.max(maxDistance,distance);\n       minDistance=Math.min(minDistance,distance);\n       global.set(\"maxDistance\",maxDistance);\n       global.set(\"minDistance\",minDistance);\n   }\n   if((a[0]===\"MSG\") && (a[1]==5)){\n       let altitude=a[11];\n       if(altitude<0){\n           altitude=0;\n       }\n       let maxAltitude=global.get(\"maxAltitude\")||0;\n       let minAltitude=global.get(\"minAltitude\")||1000000;\n       maxAltitude=Math.max(maxAltitude,altitude);\n       minAltitude=Math.min(minAltitude,altitude);\n       global.set(\"maxAltitude\",maxAltitude);\n       global.set(\"minAltitude\",minAltitude);\n   }\n}\nmsg.payload=newPayload;\n\nreturn msg;",
+        "func": "const choices=[\"MSG\",\"SEL\",\"ID\",\"AIR\",\"STA\",\"CLK\"];\nconst counts ={\n    \"MSG\":0,\n    \"SEL\":0,\n    \"ID\":0,\n    \"AIR\":0,\n    \"STA\":0,\n    \"CLK\":0\n}\nlet st=[];\nconst status= {\n          }\n    \nlet newPayload=\"\";\nlet accum=global.get(\"counts\")||counts;\nmsg.data=[];\nconst onlyUnique= (value, index, self)=> self.indexOf(value) === index;\nlet b=msg.payload.split(\"\\n\");\nfor ( const element of b){\n \n  let a=element.split(\",\");\n   if(a[0]===\"AIR\"){\n       let aircraft=global.get(\"aircraft\")||[];\n       aircraft.push(a[4]);\n       let ac=aircraft.filter(onlyUnique);\n       global.set(\"aircraft\",ac);\n       newPayload=\"found >\"+a[4]+\"< \"+ a.length+\" \" + a;\n       let total=global.get(\"totalaircraft\",\"file\")||0;\n       let grandtotal=global.get(\"grandtotalaircraft\",\"file\")||0;\n       total++;\n       grandtotal++;\n       global.set(\"totalaircraft\",total,\"file\");\n       global.set(\"grandtotalaircraft\",grandtotal,\"file\");\n   }\n   if((a[0]===\"STA\") ){\n       let aircraft=global.get(\"aircraft\")||[];\n       newPayload=a[4];\n       let i=aircraft.indexOf(a[4]);\n       if(i>=0){\n           let removed=global.get(\"removed\")||[];\n           removed.push(a[4]);\n           global.set(\"removed\",removed);\n           aircraft.splice(i,1);\n           global.set(\"aircraft\",aircraft);\n           newPayload=a[4]+\" removed \"+aircraft.length +\" remaining\";\n       }else{\n           newPayload=\">\"+a[4]+\"< not found with STA of >\"+a[10]+\"<\"+a;\n       }\n   }\n   if((a[0]===\"MSG\") && (a[1]==3)){\n       let lat=parseFloat(a[14]);\n       let lon =parseFloat(a[15]);\n       if((lon< (-99)) && (lon>(-110)) && (lat>33) && (lat<43)){\n       let distance=global.get(\"getDistance\",\"file\")(lat,lon);\n       let maxDistance=global.get(\"maxDistance\")||0;\n       let minDistance=global.get(\"minDistance\")||200;\n     if(distance>maxDistance){\n       global.set(\"maxDistance\",distance);\n       global.set(\"latitude\",a[14]);\n       global.set(\"longitude\",a[15]);\n     }\n     if(distance<minDistance){\n       global.set(\"minDistance\",distance);\n       global.set(\"minlatitude\",lat);\n       global.set(\"minlongitude\",lon);\n      }\n      let latsfound=global.get(\"latsfound\")||0;\n         global.set(\"latsfound\",++latsfound);\n       }else{\n           newPayload=a[14]+\" \" + a[15]+\" out of range\";\n       }\n   }\n   if((a[0]===\"MSG\") && (a[1]==5)){\n       let altitude=parseInt(a[11]);\n       msg.typeof=typeof(altitude);\n       if(altitude<0){\n           altitude=0;\n       }\n       let maxAltitude=global.get(\"maxAltitude\")||0;\n       let minAltitude=global.get(\"minAltitude\")||40000;\n       if(altitude>maxAltitude){\n            global.set(\"maxAltitude\",altitude);\n       }\n       if(altitude<minAltitude){\n            global.set(\"minAltitude\",altitude);\n       }\n      \n\n   }\n}\nmsg.payload=newPayload;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -72,67 +56,9 @@
         "y": 420,
         "wires": [
             [
-                "443558f94c7cf2e1"
+                "6bce7acff41f71a8"
             ]
         ]
-    },
-    {
-        "id": "443558f94c7cf2e1",
-        "type": "switch",
-        "z": "86234d68f0551624",
-        "name": "",
-        "property": "payload",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "empty"
-            },
-            {
-                "t": "regex",
-                "v": "(.)*found(.)*",
-                "vt": "str",
-                "case": true
-            },
-            {
-                "t": "regex",
-                "v": "(.)*distance(.)*",
-                "vt": "str",
-                "case": false
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 3,
-        "x": 1270,
-        "y": 460,
-        "wires": [
-            [
-                "b0d0fa6ebb5a5201"
-            ],
-            [
-                "06098624bb31532e"
-            ],
-            [
-                "e49a493ed6c58f52"
-            ]
-        ]
-    },
-    {
-        "id": "b0d0fa6ebb5a5201",
-        "type": "debug",
-        "z": "86234d68f0551624",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1340,
-        "y": 340,
-        "wires": []
     },
     {
         "id": "365132b6c7a63359",
@@ -141,8 +67,8 @@
         "name": "",
         "scope": null,
         "uncaught": false,
-        "x": 1010,
-        "y": 620,
+        "x": 960,
+        "y": 540,
         "wires": [
             [
                 "d4a9d0d7ff732471"
@@ -162,8 +88,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1160,
-        "y": 620,
+        "x": 1150,
+        "y": 560,
         "wires": []
     },
     {
@@ -191,7 +117,7 @@
             },
             {
                 "property": "unit_of_measurement",
-                "value": ""
+                "value": "aircraft"
             }
         ],
         "state": "aircraft.length",
@@ -229,12 +155,12 @@
             },
             {
                 "property": "total",
-                "value": "totalaircraft",
+                "value": "#:(file)::totalaircraft",
                 "valueType": "global"
             },
             {
                 "property": "grandtotal",
-                "value": "grandtotalaircraft",
+                "value": "#:(file)::grandtotalaircraft",
                 "valueType": "global"
             }
         ],
@@ -245,11 +171,11 @@
         "outputOnStateChange": false,
         "outputPayload": "$entity().state ? \"on\": \"off\"",
         "outputPayloadType": "jsonata",
-        "x": 1050,
-        "y": 880,
+        "x": 1390,
+        "y": 960,
         "wires": [
             [
-                "921b980860da849b"
+                "1d002e8712b7dc92"
             ]
         ]
     },
@@ -269,16 +195,15 @@
         ],
         "repeat": "",
         "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
+        "once": true,
+        "onceDelay": "5",
         "topic": "",
-        "payload": "",
         "payloadType": "date",
-        "x": 850,
+        "x": 570,
         "y": 880,
         "wires": [
             [
-                "76700d7db1da7d87"
+                "14d879b3abc03224"
             ]
         ]
     },
@@ -299,11 +224,11 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 1060,
-        "y": 1060,
+        "x": 1040,
+        "y": 1140,
         "wires": [
             [
-                "76700d7db1da7d87"
+                "14d879b3abc03224"
             ]
         ]
     },
@@ -342,34 +267,17 @@
         ],
         "repeat": "",
         "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
+        "once": true,
+        "onceDelay": "2",
         "topic": "",
-        "payload": "",
         "payloadType": "date",
-        "x": 140,
+        "x": 150,
         "y": 1040,
         "wires": [
             [
                 "86a3015c5e4be605"
             ]
         ]
-    },
-    {
-        "id": "e49a493ed6c58f52",
-        "type": "debug",
-        "z": "86234d68f0551624",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1510,
-        "y": 500,
-        "wires": []
     },
     {
         "id": "663c30326ef2f8a6",
@@ -443,7 +351,7 @@
                 "valueType": "triggerId"
             }
         ],
-        "x": 590,
+        "x": 350,
         "y": 760,
         "wires": [
             [
@@ -456,17 +364,319 @@
         "type": "function",
         "z": "86234d68f0551624",
         "name": "",
-        "func": "global.set(\"aircraft\",[]);\nglobal.set(\"counts\",{});\nglobal.set(\"removed\",[]);\nglobal.set(\"latitude\",0);\nglobal.set(\"longitude\",0);\nglobal.set(\"minAltitude\",90000);\nglobal.set(\"maxAltitude\",0);\nglobal.set(\"maxDistance\",0);\nglobal.set(\"minDistance\",50000);\nglobal.set(\"types\",[]);\nglobal.set(\"counts\",undefined);\nglobal.set(\"totalaircraft\",0);\nreturn msg;",
+        "func": "\n\nglobal.set(\"minlatitude\",0);\nglobal.set(\"minlongitude\",0);\nglobal.set(\"latitude\",0);\nglobal.set(\"longitude\",0);\nglobal.set(\"minAltitude\",40000);\nglobal.set(\"maxAltitude\",0);\nglobal.set(\"maxDistance\",0);\nglobal.set(\"minDistance\",200);\nglobal.set(\"types\",[]);\nglobal.set(\"counts\",undefined);\nglobal.set(\"totalaircraft\",0,\"file\");\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 840,
-        "y": 760,
+        "x": 540,
+        "y": 780,
+        "wires": [
+            [
+                "14d879b3abc03224"
+            ]
+        ]
+    },
+    {
+        "id": "259598b0c4001a97",
+        "type": "ha-entity",
+        "z": "86234d68f0551624",
+        "name": "F24Maxdistance",
+        "server": "08e70aa346915575",
+        "version": 1,
+        "debugenabled": false,
+        "outputs": 1,
+        "entityType": "sensor",
+        "config": [
+            {
+                "property": "name",
+                "value": "f24maxdistance"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": "mdi:airplane"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "miles"
+            }
+        ],
+        "state": "maxDistance",
+        "stateType": "global",
+        "attributes": [
+            {
+                "property": "latitude",
+                "value": "latitude",
+                "valueType": "global"
+            },
+            {
+                "property": "longitude",
+                "value": "longitude",
+                "valueType": "global"
+            }
+        ],
+        "resend": true,
+        "outputLocation": "payload",
+        "outputLocationType": "none",
+        "inputOverride": "allow",
+        "outputOnStateChange": false,
+        "outputPayload": "$entity().state ? \"on\": \"off\"",
+        "outputPayloadType": "jsonata",
+        "x": 1390,
+        "y": 820,
         "wires": [
             [
                 "76700d7db1da7d87"
+            ]
+        ]
+    },
+    {
+        "id": "b0286e855794d84a",
+        "type": "ha-entity",
+        "z": "86234d68f0551624",
+        "name": "F24MinAltitude",
+        "server": "08e70aa346915575",
+        "version": 1,
+        "debugenabled": false,
+        "outputs": 1,
+        "entityType": "sensor",
+        "config": [
+            {
+                "property": "name",
+                "value": "f24minaltitude"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": "mdi:airplane"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "feet"
+            }
+        ],
+        "state": "minAltitude",
+        "stateType": "global",
+        "attributes": [],
+        "resend": true,
+        "outputLocation": "payload",
+        "outputLocationType": "none",
+        "inputOverride": "allow",
+        "outputOnStateChange": false,
+        "outputPayload": "$entity().state ? \"on\": \"off\"",
+        "outputPayloadType": "jsonata",
+        "x": 980,
+        "y": 820,
+        "wires": [
+            [
+                "4c7eff6017eff74c"
+            ]
+        ]
+    },
+    {
+        "id": "14d879b3abc03224",
+        "type": "ha-entity",
+        "z": "86234d68f0551624",
+        "name": "F24MaxAltitude",
+        "server": "08e70aa346915575",
+        "version": 1,
+        "debugenabled": false,
+        "outputs": 1,
+        "entityType": "sensor",
+        "config": [
+            {
+                "property": "name",
+                "value": "f24maxaltitude"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": "mdi:airplane"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "feet"
+            }
+        ],
+        "state": "maxAltitude",
+        "stateType": "global",
+        "attributes": [],
+        "resend": true,
+        "outputLocation": "payload",
+        "outputLocationType": "none",
+        "inputOverride": "allow",
+        "outputOnStateChange": false,
+        "outputPayload": "$entity().state ? \"on\": \"off\"",
+        "outputPayloadType": "jsonata",
+        "x": 800,
+        "y": 820,
+        "wires": [
+            [
+                "b0286e855794d84a"
+            ]
+        ]
+    },
+    {
+        "id": "6bce7acff41f71a8",
+        "type": "switch",
+        "z": "86234d68f0551624",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1210,
+        "y": 420,
+        "wires": [
+            [
+                "17be0c2511ac160e"
+            ]
+        ]
+    },
+    {
+        "id": "17be0c2511ac160e",
+        "type": "debug",
+        "z": "86234d68f0551624",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1380,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "4c7eff6017eff74c",
+        "type": "ha-entity",
+        "z": "86234d68f0551624",
+        "name": "F24Mindistance",
+        "server": "08e70aa346915575",
+        "version": 1,
+        "debugenabled": false,
+        "outputs": 1,
+        "entityType": "sensor",
+        "config": [
+            {
+                "property": "name",
+                "value": "Cf24mindistance"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": "mdi:airplane"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "miles"
+            }
+        ],
+        "state": "minDistance",
+        "stateType": "global",
+        "attributes": [
+            {
+                "property": "latitude",
+                "value": "minlatitude",
+                "valueType": "global"
+            },
+            {
+                "property": "longitude",
+                "value": "minlongitude",
+                "valueType": "global"
+            }
+        ],
+        "resend": true,
+        "outputLocation": "payload",
+        "outputLocationType": "none",
+        "inputOverride": "allow",
+        "outputOnStateChange": false,
+        "outputPayload": "$entity().state ? \"on\": \"off\"",
+        "outputPayloadType": "jsonata",
+        "x": 1180,
+        "y": 820,
+        "wires": [
+            [
+                "259598b0c4001a97"
+            ]
+        ]
+    },
+    {
+        "id": "1d002e8712b7dc92",
+        "type": "ha-entity",
+        "z": "86234d68f0551624",
+        "name": "Marker for home",
+        "server": "08e70aa346915575",
+        "version": 1,
+        "debugenabled": false,
+        "outputs": 1,
+        "entityType": "sensor",
+        "config": [
+            {
+                "property": "name",
+                "value": "Homemarker"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": "mdi:home"
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": "miles"
+            }
+        ],
+        "state": "0",
+        "stateType": "num",
+        "attributes": [
+            {
+                "property": "latitude",
+                "value": "38.0056",
+                "valueType": "num"
+            },
+            {
+                "property": "longitude",
+                "value": "-105.361",
+                "valueType": "num"
+            }
+        ],
+        "resend": true,
+        "outputLocation": "payload",
+        "outputLocationType": "none",
+        "inputOverride": "allow",
+        "outputOnStateChange": false,
+        "outputPayload": "$entity().state ? \"on\": \"off\"",
+        "outputPayloadType": "jsonata",
+        "x": 1190,
+        "y": 1060,
+        "wires": [
+            [
+                "921b980860da849b"
             ]
         ]
     }
