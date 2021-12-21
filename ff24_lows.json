@@ -179,7 +179,8 @@
         "once": true,
         "onceDelay": "5",
         "topic": "",
-        "payloadType": "date",
+        "payload": "emptystring",
+        "payloadType": "str",
         "x": 550,
         "y": 880,
         "wires": [
@@ -238,69 +239,6 @@
         "wires": [
             [
                 "7e2e435c2a7cb822"
-            ]
-        ]
-    },
-    {
-        "id": "d4545b855557ce32",
-        "type": "server-state-changed",
-        "z": "86234d68f0551624",
-        "name": "Reset",
-        "server": "08e70aa346915575",
-        "version": 3,
-        "exposeToHomeAssistant": false,
-        "haConfig": [
-            {
-                "property": "name",
-                "value": ""
-            },
-            {
-                "property": "icon",
-                "value": ""
-            }
-        ],
-        "entityidfilter": "input_boolean.reset_f24",
-        "entityidfiltertype": "exact",
-        "outputinitially": false,
-        "state_type": "str",
-        "haltifstate": "",
-        "halt_if_type": "str",
-        "halt_if_compare": "is",
-        "outputs": 1,
-        "output_only_on_state_change": true,
-        "for": 0,
-        "forType": "num",
-        "forUnits": "minutes",
-        "ignorePrevStateNull": true,
-        "ignorePrevStateUnknown": true,
-        "ignorePrevStateUnavailable": true,
-        "ignoreCurrentStateUnknown": true,
-        "ignoreCurrentStateUnavailable": true,
-        "outputProperties": [
-            {
-                "property": "payload",
-                "propertyType": "msg",
-                "value": "",
-                "valueType": "entityState"
-            },
-            {
-                "property": "data",
-                "propertyType": "msg",
-                "value": "",
-                "valueType": "eventData"
-            },
-            {
-                "property": "topic",
-                "propertyType": "msg",
-                "value": "",
-                "valueType": "triggerId"
-            }
-        ],
-        "x": 350,
-        "y": 770,
-        "wires": [
-            [
-                "96a3923d49557d91"
             ]
         ]
     },
@@ -942,7 +880,7 @@
         "type": "function",
         "z": "86234d68f0551624",
         "name": "parse feed",
-        "func": "const choices = [\"MSG\", \"SEL\", \"ID\", \"AIR\", \"STA\", \"CLK\"];\nconst counts = {\n    \"MSG\": 0,\n    \"SEL\": 0,\n    \"ID\": 0,\n    \"AIR\": 0,\n    \"STA\": 0,\n    \"CLK\": 0\n}\nlet st = [];\nconst status = {}\n\nlet newPayload = \"\";\nlet accum = global.get(\"counts\") || counts;\nmsg.data = [];\nconst onlyUnique = (value, index, self) => self.indexOf(value) === index;\nlet b = msg.payload.split(\"\\n\");\nfor (const element of b) {\n    let a = element.split(\",\");\n    if (a[0] === 'ID') {\n        let oldSign = a[4];\n        let newSign = a[10];\n        let ac = global.get(\"aircraft\");\n        let i = ac.indexOf(oldSign);\n        newPayload = a[4] + '<>' + a[10];\n        if (i >= 0) {\n            let cs = global.get(\"callsigns\") || {};\n            cs[oldSign] = newSign;\n            global.set(\"callsigns\", cs);\n            newPayload = \"CHANGED\" + newPayload;\n        }\n    }\n    if (a[0] === \"AIR\") {\n        let aircraft = global.get(\"aircraft\") || [];\n        aircraft.push(a[4]);\n        let ac = aircraft.filter(onlyUnique);\n        global.set(\"aircraft\", ac);\n        newPayload = \"AIR >\" + a[4] + \"< \" + a.length + \" \" + a;\n        let total = global.get(\"totalaircraft\", \"file\") || 0;\n        let grandtotal = global.get(\"grandtotalaircraft\", \"file\") || 0;\n        total++;\n        grandtotal++;\n        global.set(\"totalaircraft\", total, \"file\");\n        global.set(\"grandtotalaircraft\", grandtotal, \"file\");\n    }\n    if ((a[0] === \"STA\")) {\n        let aircraft = global.get(\"aircraft\") || [];\n        newPayload = a[4];\n        let i = aircraft.indexOf(a[4]);\n        if (i >= 0) {\n            let removed = global.get(\"removed\") || [];\n            removed.push(a[4]);\n            global.set(\"removed\", removed);\n            aircraft.splice(i, 1);\n            global.set(\"aircraft\", aircraft);\n            newPayload = a[0] + a[4] + \" removed \" + aircraft.length + \" remaining\";\n        } else {\n            newPayload = a[0] + \">\" + a[4] + \"< not found with STA of >\" + a[10] + \"<\" + a;\n        }\n        let callsigns = global.get(\"callsigns\") || {};\n        delete callsigns[a[4]];\n        global.set(\"callsigns\", callsigns);\n    }\n    if ((a[0] === \"MSG\") && (a[1] == 3)) {\n        let lat = parseFloat(a[14]);\n        let lon = parseFloat(a[15]);\n        if ((lon < (-99)) && (lon > (-110)) && (lat > 33) && (lat < 43)) {\n            let callsigns = global.get(\"callsigns\") || {};\n            let distance = global.get(\"getDistance\", \"file\")(lat, lon);\n            let maxDistance = global.get(\"maxDistance\") || 0;\n            let minDistance = global.get(\"minDistance\") || 200;\n            let northlat = global.get(\"northlat\") || 0;\n            let southlat = global.get(\"southlat\") || 44;\n            let eastlon = global.get(\"eastlon\") || -111;\n            let westlon = global.get(\"westlon\") || -99;\n            if (lat > northlat) {\n                global.set(\"northlat\", lat);\n                global.set(\"northlon\", lon);\n                global.set(\"northdistance\", distance);\n                if (callsigns[a[4]]) {\n                    global.set(\"northid\", callsigns[a[4]]);\n                } else {\n                    global.set(\"northid\", a[4]);\n                }\n            }\n            if (lat < southlat) {\n                global.set(\"southlat\", lat);\n                global.set(\"southlon\", lon);\n                global.set(\"southdistance\", distance);\n                if (callsigns[a[4]]) {\n                    global.set(\"southid\", callsigns[a[4]]);\n                } else {\n                    global.set(\"southid\", a[4]);\n                }\n            }\n            if (lon > eastlon) {\n                global.set(\"eastlat\", lat);\n                global.set(\"eastlon\", lon);\n                global.set(\"eastdistance\", distance);\n                if (callsigns[a[4]]) {\n                    global.set(\"eastid\", callsigns[a[4]]);\n                } else {\n                    global.set(\"eastid\", a[4]);\n                }\n            }\n            if (lon < westlon) {\n                global.set(\"westlat\", lat);\n                global.set(\"westlon\", lon);\n                global.set(\"westdistance\", distance);\n                if (callsigns[a[4]]) {\n                    global.set(\"westid\", callsigns[a[4]]);\n                } else {\n                    global.set(\"westid\", a[4]);\n                }\n            }\n            if (distance > maxDistance) {\n                global.set(\"maxDistance\", distance);\n                global.set(\"latitude\", a[14]);\n                global.set(\"longitude\", a[15]);\n                let cs = global.get(\"callsigns\") || {};\n                if (cs[a[4]]) {\n                    global.set(\"maxid\", cs[a[4]]);\n                } else {\n                    global.set(\"maxid\", a[4]);\n                }\n            }\n            if (distance < minDistance) {\n                global.set(\"minDistance\", distance);\n                global.set(\"minlatitude\", lat);\n                global.set(\"minlongitude\", lon);\n                let cs = global.get(\"callsigns\") || {};\n                if (cs[a[4]]) {\n                    global.set(\"minid\", cs[a[4]]);\n                } else {\n                    global.set(\"minid\", a[4]);\n                }\n            }\n            let latsfound = global.get(\"latsfound\") || 0;\n            global.set(\"latsfound\", ++latsfound);\n        } else {\n            newPayload = a[14] + \" \" + a[15] + \" out of range\";\n        }\n    }\n    if ((a[0] === \"MSG\") && (a[1] == 5)) {\n        let altitude = parseInt(a[11]);\n        msg.typeof = typeof (altitude);\n        if (altitude < 0) {\n            altitude = 0;\n        }\n        let maxAltitude = global.get(\"maxAltitude\") || 0;\n        let minAltitude = global.get(\"minAltitude\") || 40000;\n        if (altitude > maxAltitude) {\n            global.set(\"maxAltitude\", altitude);\n            let cs = global.get(\"callsigns\") || {};\n            if (cs[a[4]]) {\n                global.set(\"maxaltid\", cs[a[4]]);\n            } else {\n                global.set(\"maxaltid\", a[4]);\n            }\n        }\n        if (altitude < minAltitude) {\n            global.set(\"minAltitude\", altitude);\n            let cs = global.get(\"callsigns\") || {};\n            if (cs[a[4]]) {\n                global.set(\"minaltid\", cs[a[4]]);\n            } else {\n                global.set(\"minaltid\", a[4]);\n            }\n        }\n\n\n    }\n}\nmsg.payload = newPayload;\n\nreturn msg;\n",
+        "func": "const choices = [\"MSG\", \"SEL\", \"ID\", \"AIR\", \"STA\", \"CLK\"];\nconst counts = {\n    \"MSG\": 0,\n    \"SEL\": 0,\n    \"ID\": 0,\n    \"AIR\": 0,\n    \"STA\": 0,\n    \"CLK\": 0\n}\nlet st = [];\nconst status = {}\n\nlet newPayload = \"\";\nlet accum = global.get(\"counts\") || counts;\nmsg.data = [];\nconst onlyUnique = (value, index, self) => self.indexOf(value) === index;\nif( typeof msg.payload==='string'){\n    let b = msg.payload.split(\"\\n\");\nfor (const element of b) {\n    let a = element.split(\",\");\n    if (a[0] === 'ID') {\n        let oldSign = a[4];\n        let newSign = a[10];\n        let ac = global.get(\"aircraft\");\n        let i = ac.indexOf(oldSign);\n        newPayload = a[4] + '<>' + a[10];\n        if (i >= 0) {\n            let cs = global.get(\"callsigns\") || {};\n            cs[oldSign] = newSign;\n            global.set(\"callsigns\", cs);\n            newPayload = \"CHANGED\" + newPayload;\n        }\n    }\n    if (a[0] === \"AIR\") {\n        let aircraft = global.get(\"aircraft\") || [];\n        aircraft.push(a[4]);\n        let ac = aircraft.filter(onlyUnique);\n        global.set(\"aircraft\", ac);\n        newPayload = \"AIR >\" + a[4] + \"< \" + a.length + \" \" + a;\n        let total = global.get(\"totalaircraft\", \"file\") || 0;\n        let grandtotal = global.get(\"grandtotalaircraft\", \"file\") || 0;\n        total++;\n        grandtotal++;\n        global.set(\"totalaircraft\", total, \"file\");\n        global.set(\"grandtotalaircraft\", grandtotal, \"file\");\n    }\n    if ((a[0] === \"STA\")) {\n        let aircraft = global.get(\"aircraft\") || [];\n        newPayload = a[4];\n        let i = aircraft.indexOf(a[4]);\n        if (i >= 0) {\n            let removed = global.get(\"removed\") || [];\n            removed.push(a[4]);\n            global.set(\"removed\", removed);\n            aircraft.splice(i, 1);\n            global.set(\"aircraft\", aircraft);\n            newPayload = a[0] + a[4] + \" removed \" + aircraft.length + \" remaining\";\n        } else {\n            newPayload = a[0] + \">\" + a[4] + \"< not found with STA of >\" + a[10] + \"<\" + a;\n        }\n        let callsigns = global.get(\"callsigns\") || {};\n        delete callsigns[a[4]];\n        global.set(\"callsigns\", callsigns);\n    }\n    if ((a[0] === \"MSG\") && (a[1] == 3)) {\n        let lat = parseFloat(a[14]);\n        let lon = parseFloat(a[15]);\n        if ((lon < (-99)) && (lon > (-110)) && (lat > 33) && (lat < 43)) {\n            let callsigns = global.get(\"callsigns\") || {};\n            let distance = global.get(\"getDistance\", \"file\")(lat, lon);\n            let maxDistance = global.get(\"maxDistance\") || 0;\n            let minDistance = global.get(\"minDistance\") || 200;\n            let northlat = global.get(\"northlat\") || 0;\n            let southlat = global.get(\"southlat\") || 44;\n            let eastlon = global.get(\"eastlon\") || -111;\n            let westlon = global.get(\"westlon\") || -99;\n            if (lat > northlat) {\n                global.set(\"northlat\", lat);\n                global.set(\"northlon\", lon);\n                global.set(\"northdistance\", distance);\n                if (callsigns[a[4]]) {\n                    global.set(\"northid\", callsigns[a[4]]);\n                } else {\n                    global.set(\"northid\", a[4]);\n                }\n            }\n            if (lat < southlat) {\n                global.set(\"southlat\", lat);\n                global.set(\"southlon\", lon);\n                global.set(\"southdistance\", distance);\n                if (callsigns[a[4]]) {\n                    global.set(\"southid\", callsigns[a[4]]);\n                } else {\n                    global.set(\"southid\", a[4]);\n                }\n            }\n            if (lon > eastlon) {\n                global.set(\"eastlat\", lat);\n                global.set(\"eastlon\", lon);\n                global.set(\"eastdistance\", distance);\n                if (callsigns[a[4]]) {\n                    global.set(\"eastid\", callsigns[a[4]]);\n                } else {\n                    global.set(\"eastid\", a[4]);\n                }\n            }\n            if (lon < westlon) {\n                global.set(\"westlat\", lat);\n                global.set(\"westlon\", lon);\n                global.set(\"westdistance\", distance);\n                if (callsigns[a[4]]) {\n                    global.set(\"westid\", callsigns[a[4]]);\n                } else {\n                    global.set(\"westid\", a[4]);\n                }\n            }\n            if (distance > maxDistance) {\n                global.set(\"maxDistance\", distance);\n                global.set(\"latitude\", a[14]);\n                global.set(\"longitude\", a[15]);\n                let cs = global.get(\"callsigns\") || {};\n                if (cs[a[4]]) {\n                    global.set(\"maxid\", cs[a[4]]);\n                } else {\n                    global.set(\"maxid\", a[4]);\n                }\n            }\n            if (distance < minDistance) {\n                global.set(\"minDistance\", distance);\n                global.set(\"minlatitude\", lat);\n                global.set(\"minlongitude\", lon);\n                let cs = global.get(\"callsigns\") || {};\n                if (cs[a[4]]) {\n                    global.set(\"minid\", cs[a[4]]);\n                } else {\n                    global.set(\"minid\", a[4]);\n                }\n            }\n            let latsfound = global.get(\"latsfound\") || 0;\n            global.set(\"latsfound\", ++latsfound);\n        } else {\n            newPayload = a[14] + \" \" + a[15] + \" out of range\";\n        }\n    }\n    if ((a[0] === \"MSG\") && (a[1] == 5)) {\n        let altitude = parseInt(a[11]);\n        msg.typeof = typeof (altitude);\n        if (altitude < 0) {\n            altitude = 0;\n        }\n        let maxAltitude = global.get(\"maxAltitude\") || 0;\n        let minAltitude = global.get(\"minAltitude\") || 40000;\n        if (altitude > maxAltitude) {\n            global.set(\"maxAltitude\", altitude);\n            let cs = global.get(\"callsigns\") || {};\n            if (cs[a[4]]) {\n                global.set(\"maxaltid\", cs[a[4]]);\n            } else {\n                global.set(\"maxaltid\", a[4]);\n            }\n        }\n        if (altitude < minAltitude) {\n            global.set(\"minAltitude\", altitude);\n            let cs = global.get(\"callsigns\") || {};\n            if (cs[a[4]]) {\n                global.set(\"minaltid\", cs[a[4]]);\n            } else {\n                global.set(\"minaltid\", a[4]);\n            }\n        }\n\n\n    }\n}\nmsg.payload = newPayload;\n\nreturn msg;\n}else{\n    return null;\n}\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -980,5 +918,89 @@
                 "da1e2904ccc9a40b"
             ]
         ]
+    },
+    {
+        "id": "f2fbc025d89467ab",
+        "type": "ha-entity",
+        "z": "86234d68f0551624",
+        "name": "",
+        "server": "08e70aa346915575",
+        "version": 1,
+        "debugenabled": false,
+        "outputs": 2,
+        "entityType": "switch",
+        "config": [
+            {
+                "property": "name",
+                "value": "Reset F24"
+            },
+            {
+                "property": "device_class",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            },
+            {
+                "property": "unit_of_measurement",
+                "value": ""
+            }
+        ],
+        "state": "payload",
+        "stateType": "msg",
+        "attributes": [],
+        "resend": true,
+        "outputLocation": "payload",
+        "outputLocationType": "none",
+        "inputOverride": "allow",
+        "outputOnStateChange": false,
+        "outputPayload": "$entity().state ? \"on\": \"off\"",
+        "outputPayloadType": "jsonata",
+        "x": 330,
+        "y": 760,
+        "wires": [
+            [
+                "96a3923d49557d91",
+                "4852c7cceeb80c9f"
+            ],
+            [
+                "a065a19933e2c229"
+            ]
+        ]
+    },
+    {
+        "id": "4852c7cceeb80c9f",
+        "type": "debug",
+        "z": "86234d68f0551624",
+        "name": "top",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "a065a19933e2c229",
+        "type": "debug",
+        "z": "86234d68f0551624",
+        "name": "bottom",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 394,
+        "y": 822,
+        "wires": []
     }
 ]
