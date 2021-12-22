@@ -1,0 +1,129 @@
+type: custom:themable-grid
+padding: 0
+gap: 8px
+breakpoints:
+  - name: mobile
+    mq: '(max-width: 767px)'
+    columns: 1
+  - name: tablet
+    mq: '(min-width: 768px) and (max-width: 1023px)'
+    columns: 2
+  - name: desktop
+    mq: '(min-width: 1024px)'
+    columns: 4
+cards:
+  - type: gauge
+    entity: sensor.f24
+    min: 0
+    max: 100
+    name: Flights Tracked
+  - type: entities
+    entities:
+      - entity: sensor.f24
+      - type: attribute
+        entity: sensor.f24
+        attribute: maxdistance
+        name: Max Distance
+      - type: attribute
+        entity: sensor.f24
+        attribute: mindistance
+        name: Min Distance
+      - type: attribute
+        entity: sensor.f24
+        attribute: minaltitude
+        name: Min Altitude
+      - type: attribute
+        entity: sensor.f24
+        attribute: maxaltitude
+        name: Max Altitude
+      - type: attribute
+        entity: sensor.f24
+        attribute: latitude
+        name: Latitude
+      - type: attribute
+        entity: sensor.f24
+        attribute: longitude
+        name: Longitude
+      - type: attribute
+        entity: sensor.f24
+        attribute: total
+        name: Total Aircraft
+      - type: attribute
+        entity: sensor.f24
+        attribute: grandtotal
+        name: Grand Total
+  - type: entities
+    entities:
+      - type: attribute
+        entity: sensor.f24
+        attribute: maxid
+        name: Max Dist ID
+      - type: attribute
+        entity: sensor.f24
+        attribute: minid
+        name: Min Dist ID
+      - type: attribute
+        entity: sensor.f24
+        attribute: maxaltid
+        name: Max Alt ID
+      - type: attribute
+        entity: sensor.f24
+        attribute: minaltid
+        name: Min Alt ID
+      - type: attribute
+        entity: sensor.nf24
+        name: North ID
+        attribute: id
+      - type: attribute
+        entity: sensor.sf24
+        name: South ID
+        attribute: id
+      - type: attribute
+        entity: sensor.ef24
+        name: East ID
+        attribute: id
+      - type: attribute
+        entity: sensor.wf24
+        name: West ID
+        attribute: id
+  - type: history-graph
+    entities:
+      - entity: sensor.f24
+    refresh_interval: 1
+    hours_to_show: 24
+    title: Tracked Aircraft
+  - type: map
+    entities:
+      - entity: sensor.cf24mindistance
+      - entity: sensor.f24maxdistance
+      - entity: sensor.homemarker
+      - entity: sensor.nf24
+      - entity: sensor.ef24
+      - entity: sensor.sf24
+      - entity: sensor.wf24
+    dark_mode: false
+    default_zoom: 12
+  - type: history-graph
+    entities:
+      - entity: sensor.f24maxdistance
+    refresh_interval: 1
+    hours_to_show: 24
+    title: Max Distance
+  - type: history-graph
+    entities:
+      - entity: sensor.f24maxaltitude
+    hours_to_show: 24
+    refresh_interval: 1
+    title: Max Altitude
+  - type: button
+    tap_action:
+      action: call-service
+      service: nodered.trigger
+      service_data:
+        entity_id: switch.reset_f24
+        payload: triggered
+      target: {}
+    entity: switch.reset_f24
+    name: Reset F24
+    icon_height: 30px
+
