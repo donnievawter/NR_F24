@@ -59,7 +59,7 @@
         "z": "86234d68f0551624",
         "name": "F24Tracked",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -79,6 +79,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "aircraft"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "aircraft.length",
@@ -267,7 +275,7 @@
         "z": "86234d68f0551624",
         "name": "F24Maxdistance",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -287,6 +295,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "maxDistance",
@@ -329,7 +345,7 @@
         "z": "86234d68f0551624",
         "name": "F24MinAltitude",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -349,6 +365,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "feet"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "minAltitude",
@@ -381,7 +405,7 @@
         "z": "86234d68f0551624",
         "name": "F24MaxAltitude",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -401,6 +425,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "feet"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "maxAltitude",
@@ -476,7 +508,7 @@
         "z": "86234d68f0551624",
         "name": "F24Mindistance",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -496,6 +528,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "minDistance",
@@ -538,7 +578,7 @@
         "z": "86234d68f0551624",
         "name": "Marker for home",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -558,6 +598,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "0",
@@ -595,7 +643,7 @@
         "z": "86234d68f0551624",
         "name": "Northern Point",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -615,6 +663,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "northdistance",
@@ -657,7 +713,7 @@
         "z": "86234d68f0551624",
         "name": "Southern Point",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -677,6 +733,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "southdistance",
@@ -719,7 +783,7 @@
         "z": "86234d68f0551624",
         "name": "WestPoint",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -739,6 +803,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "westdistance",
@@ -781,7 +853,7 @@
         "z": "86234d68f0551624",
         "name": "Eastern Point",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -801,6 +873,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "eastdistance",
@@ -915,7 +995,8 @@
         "y": 640,
         "wires": [
             [
-                "da1e2904ccc9a40b"
+                "da1e2904ccc9a40b",
+                "14d879b3abc03224"
             ]
         ]
     },
@@ -925,7 +1006,7 @@
         "z": "86234d68f0551624",
         "name": "",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 2,
         "entityType": "switch",
@@ -944,6 +1025,14 @@
             },
             {
                 "property": "unit_of_measurement",
+                "value": ""
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
                 "value": ""
             }
         ],

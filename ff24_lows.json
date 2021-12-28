@@ -8,6 +8,14 @@
         "env": []
     },
     {
+        "id": "0b5e95fcc23cd134",
+        "type": "tab",
+        "label": "Generate Flow Files",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "08e70aa346915575",
         "type": "server",
         "name": "Home Assistant",
@@ -59,7 +67,7 @@
         "z": "86234d68f0551624",
         "name": "F24Tracked",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -79,6 +87,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "aircraft"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "aircraft.length",
@@ -267,7 +283,7 @@
         "z": "86234d68f0551624",
         "name": "F24Maxdistance",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -287,6 +303,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "maxDistance",
@@ -329,7 +353,7 @@
         "z": "86234d68f0551624",
         "name": "F24MinAltitude",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -349,6 +373,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "feet"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "minAltitude",
@@ -381,7 +413,7 @@
         "z": "86234d68f0551624",
         "name": "F24MaxAltitude",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -401,6 +433,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "feet"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "maxAltitude",
@@ -476,7 +516,7 @@
         "z": "86234d68f0551624",
         "name": "F24Mindistance",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -496,6 +536,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "minDistance",
@@ -538,7 +586,7 @@
         "z": "86234d68f0551624",
         "name": "Marker for home",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -558,6 +606,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "0",
@@ -595,7 +651,7 @@
         "z": "86234d68f0551624",
         "name": "Northern Point",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -615,6 +671,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "northdistance",
@@ -657,7 +721,7 @@
         "z": "86234d68f0551624",
         "name": "Southern Point",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -677,6 +741,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "southdistance",
@@ -719,7 +791,7 @@
         "z": "86234d68f0551624",
         "name": "WestPoint",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -739,6 +811,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "westdistance",
@@ -781,7 +861,7 @@
         "z": "86234d68f0551624",
         "name": "Eastern Point",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 1,
         "entityType": "sensor",
@@ -801,6 +881,14 @@
             {
                 "property": "unit_of_measurement",
                 "value": "miles"
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
+                "value": ""
             }
         ],
         "state": "eastdistance",
@@ -926,7 +1014,7 @@
         "z": "86234d68f0551624",
         "name": "",
         "server": "08e70aa346915575",
-        "version": 1,
+        "version": 2,
         "debugenabled": false,
         "outputs": 2,
         "entityType": "switch",
@@ -945,6 +1033,14 @@
             },
             {
                 "property": "unit_of_measurement",
+                "value": ""
+            },
+            {
+                "property": "state_class",
+                "value": ""
+            },
+            {
+                "property": "last_reset",
                 "value": ""
             }
         ],
@@ -1002,6 +1098,156 @@
         "statusType": "auto",
         "x": 394,
         "y": 822,
+        "wires": []
+    },
+    {
+        "id": "59f594537b94e98a",
+        "type": "file in",
+        "z": "0b5e95fcc23cd134",
+        "name": "Read Flow Files",
+        "filename": "/home/donvawter/.node-red/projects/NR_F24/ff24_lows.json",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 410,
+        "y": 500,
+        "wires": [
+            [
+                "c59c28e395a11ae2"
+            ]
+        ]
+    },
+    {
+        "id": "c59c28e395a11ae2",
+        "type": "json",
+        "z": "0b5e95fcc23cd134",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 610,
+        "y": 500,
+        "wires": [
+            [
+                "0ba50b57eafa855f"
+            ]
+        ]
+    },
+    {
+        "id": "0ba50b57eafa855f",
+        "type": "function",
+        "z": "0b5e95fcc23cd134",
+        "name": "Parse into indiviual files",
+        "func": "let flows=msg.payload;\nlet tabs = flows.filter(el => el[\"type\"] === \"tab\");\nlet out=[];\ntabs.forEach(el => {\n    let id = el[\"id\"];\n    let re = / /g;\n    let lab = el[\"label\"].replace(re, \"_\") + \".json\";\n    let members = flows.filter(mem => mem[\"z\"] === id);\n    members.unshift(el);\n     let m={\"filename\":\"/home/donvawter/.node-red/projects/NR_F24/\" +lab,\n               \"payload\":JSON.stringify(members)\n               }               ;\n     out.push(m);\n});\nreturn [out];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 870,
+        "y": 500,
+        "wires": [
+            [
+                "ca82223793d83012"
+            ]
+        ]
+    },
+    {
+        "id": "2e3d66e7ee665b80",
+        "type": "debug",
+        "z": "0b5e95fcc23cd134",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1350,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "06accbe91a65d77a",
+        "type": "inject",
+        "z": "0b5e95fcc23cd134",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 500,
+        "wires": [
+            [
+                "59f594537b94e98a"
+            ]
+        ]
+    },
+    {
+        "id": "ca82223793d83012",
+        "type": "file",
+        "z": "0b5e95fcc23cd134",
+        "name": "",
+        "filename": "",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1140,
+        "y": 500,
+        "wires": [
+            [
+                "2e3d66e7ee665b80"
+            ]
+        ]
+    },
+    {
+        "id": "5fea691c110a7083",
+        "type": "catch",
+        "z": "0b5e95fcc23cd134",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 630,
+        "y": 700,
+        "wires": [
+            [
+                "c1f0153e986b78cc"
+            ]
+        ]
+    },
+    {
+        "id": "c1f0153e986b78cc",
+        "type": "debug",
+        "z": "0b5e95fcc23cd134",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 790,
+        "y": 700,
         "wires": []
     }
 ]
