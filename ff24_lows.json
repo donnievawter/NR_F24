@@ -2,7 +2,7 @@
     {
         "id": "86234d68f0551624",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "F24",
         "disabled": false,
         "info": "",
         "env": []
@@ -931,14 +931,14 @@
         "z": "86234d68f0551624",
         "name": "",
         "server": "client",
-        "host": "192.168.0.112",
+        "host": "pif24.lan",
         "port": "30003",
         "datamode": "stream",
         "datatype": "utf8",
         "newline": "",
         "topic": "",
         "base64": false,
-        "x": 590,
+        "x": 570,
         "y": 420,
         "wires": [
             [
