@@ -16,6 +16,14 @@
         "env": []
     },
     {
+        "id": "03a926de522cf550",
+        "type": "tab",
+        "label": "HA Restart",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "08e70aa346915575",
         "type": "server",
         "name": "Home Assistant",
@@ -49,7 +57,7 @@
         "type": "debug",
         "z": "86234d68f0551624",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -498,7 +506,7 @@
         "type": "debug",
         "z": "86234d68f0551624",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1072,7 +1080,7 @@
         "type": "debug",
         "z": "86234d68f0551624",
         "name": "top",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1089,7 +1097,7 @@
         "type": "debug",
         "z": "86234d68f0551624",
         "name": "bottom",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1102,11 +1110,27 @@
         "wires": []
     },
     {
+        "id": "dca02d5ce9692386",
+        "type": "link in",
+        "z": "86234d68f0551624",
+        "name": "",
+        "links": [
+            "544fe04a70df5391"
+        ],
+        "x": 525,
+        "y": 940,
+        "wires": [
+            [
+                "14d879b3abc03224"
+            ]
+        ]
+    },
+    {
         "id": "59f594537b94e98a",
         "type": "file in",
         "z": "0b5e95fcc23cd134",
         "name": "Read Flow Files",
-        "filename": "/home/red/.node-red/projects/NR_F24/ff24_lows.json",
+        "filename": "/home/nodered/.node-red/projects/NR_F24/ff24_lows.json",
         "format": "utf8",
         "chunk": false,
         "sendError": false,
@@ -1132,7 +1156,8 @@
         "y": 500,
         "wires": [
             [
-                "0ba50b57eafa855f"
+                "0ba50b57eafa855f",
+                "2e3d66e7ee665b80"
             ]
         ]
     },
@@ -1141,14 +1166,14 @@
         "type": "function",
         "z": "0b5e95fcc23cd134",
         "name": "Parse into indiviual files",
-        "func": "let flows=msg.payload;\nlet tabs = flows.filter(el => el[\"type\"] === \"tab\");\nlet out=[];\ntabs.forEach(el => {\n    let id = el[\"id\"];\n    let re = / /g;\n    let lab = el[\"label\"].replace(re, \"_\") + \".json\";\n    let members = flows.filter(mem => mem[\"z\"] === id);\n    members.unshift(el);\n     let m={\"filename\":\"/home/red/.node-red/projects/NR_F24/\" +lab,\n               \"payload\":JSON.stringify(members)\n               }               ;\n     out.push(m);\n});\nreturn [out];",
+        "func": "let flows=msg.payload;\nlet tabs = flows.filter(el => el[\"type\"] === \"tab\");\nlet out=[];\ntabs.forEach(el => {\n    let id = el[\"id\"];\n    let re = / /g;\n    let lab = el[\"label\"].replace(re, \"_\") + \".json\";\n    let members = flows.filter(mem => mem[\"z\"] === id);\n    members.unshift(el);\n     let m={\"filename\":\"/home/nodered/.node-red/projects/NR_F24/\" +lab,\n               \"payload\":JSON.stringify(members)\n               }               ;\n     out.push(m);\n});\nreturn [out];",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 870,
-        "y": 500,
+        "x": 910,
+        "y": 520,
         "wires": [
             [
                 "ca82223793d83012"
@@ -1168,8 +1193,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1350,
-        "y": 500,
+        "x": 1310,
+        "y": 340,
         "wires": []
     },
     {
@@ -1248,6 +1273,265 @@
         "statusType": "auto",
         "x": 790,
         "y": 700,
+        "wires": []
+    },
+    {
+        "id": "9504f8f91fa85c99",
+        "type": "server-events",
+        "z": "03a926de522cf550",
+        "name": "",
+        "server": "08e70aa346915575",
+        "version": 1,
+        "event_type": "home_assistant_client",
+        "exposeToHomeAssistant": false,
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "waitForRunning": false,
+        "outputProperties": [
+            {
+                "property": "payload",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "eventData"
+            }
+        ],
+        "x": 440,
+        "y": 240,
+        "wires": [
+            [
+                "2008e8b6b3a4e338"
+            ]
+        ]
+    },
+    {
+        "id": "2008e8b6b3a4e338",
+        "type": "switch",
+        "z": "03a926de522cf550",
+        "name": "running?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "running",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 652,
+        "y": 240,
+        "wires": [
+            [
+                "491ef0f618c659c6"
+            ]
+        ]
+    },
+    {
+        "id": "890a23753ca04199",
+        "type": "api-call-service",
+        "z": "03a926de522cf550",
+        "name": "",
+        "server": "08e70aa346915575",
+        "version": 3,
+        "debugenabled": false,
+        "service_domain": "input_boolean",
+        "service": "turn_off",
+        "entityId": "input_boolean.home_assistant_restarted",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "mustacheAltTags": false,
+        "outputProperties": [],
+        "queue": "none",
+        "x": 1048,
+        "y": 240,
+        "wires": [
+            [
+                "544fe04a70df5391"
+            ]
+        ]
+    },
+    {
+        "id": "491ef0f618c659c6",
+        "type": "api-current-state",
+        "z": "03a926de522cf550",
+        "name": "has restarted?",
+        "server": "08e70aa346915575",
+        "version": 3,
+        "outputs": 2,
+        "halt_if": "on",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "input_boolean.home_assistant_restarted",
+        "state_type": "str",
+        "blockInputOverrides": false,
+        "outputProperties": [],
+        "for": 0,
+        "forType": "num",
+        "forUnits": "minutes",
+        "x": 816,
+        "y": 240,
+        "wires": [
+            [
+                "890a23753ca04199"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f69e7f0b32ab5db8",
+        "type": "server-state-changed",
+        "z": "03a926de522cf550",
+        "name": "restarted?",
+        "server": "08e70aa346915575",
+        "version": 3,
+        "exposeToHomeAssistant": false,
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "entityidfilter": "input_boolean.home_assistant_restarted",
+        "entityidfiltertype": "exact",
+        "outputinitially": false,
+        "state_type": "str",
+        "haltifstate": "on",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "outputs": 2,
+        "output_only_on_state_change": false,
+        "for": 0,
+        "forType": "num",
+        "forUnits": "minutes",
+        "ignorePrevStateNull": false,
+        "ignorePrevStateUnknown": false,
+        "ignorePrevStateUnavailable": false,
+        "ignoreCurrentStateUnknown": false,
+        "ignoreCurrentStateUnavailable": false,
+        "outputProperties": [],
+        "x": 828,
+        "y": 288,
+        "wires": [
+            [
+                "890a23753ca04199"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "67d777b9bbe92b8b",
+        "type": "comment",
+        "z": "03a926de522cf550",
+        "name": "Home Assistant Restarted",
+        "info": "",
+        "x": 430,
+        "y": 144,
+        "wires": []
+    },
+    {
+        "id": "544fe04a70df5391",
+        "type": "link out",
+        "z": "03a926de522cf550",
+        "name": "Home Assistant Restarted",
+        "mode": "link",
+        "links": [
+            "e4287e08b18c56c2",
+            "dca02d5ce9692386"
+        ],
+        "x": 1320,
+        "y": 240,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "e4287e08b18c56c2",
+        "type": "link in",
+        "z": "03a926de522cf550",
+        "name": "Home Assistant Restarted",
+        "links": [
+            "544fe04a70df5391"
+        ],
+        "x": 430,
+        "y": 336,
+        "wires": [
+            [
+                "bb76852263a16fda"
+            ]
+        ],
+        "l": true
+    },
+    {
+        "id": "bb76852263a16fda",
+        "type": "debug",
+        "z": "03a926de522cf550",
+        "name": "do stuff",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 652,
+        "y": 336,
+        "wires": []
+    },
+    {
+        "id": "0c90ea94cb39e026",
+        "type": "catch",
+        "z": "03a926de522cf550",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 490,
+        "y": 480,
+        "wires": [
+            [
+                "11f29da7dccae72e"
+            ]
+        ]
+    },
+    {
+        "id": "11f29da7dccae72e",
+        "type": "debug",
+        "z": "03a926de522cf550",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "c2e1fd88826bdcb6",
+        "type": "comment",
+        "z": "03a926de522cf550",
+        "name": "",
+        "info": "alias: Home Assistant Restart\ndescription: \"\"\ntrigger:\n  - platform: homeassistant\n    event: start\ncondition: []\naction:\n  - service: input_boolean.turn_on\n    data: {}\n    entity_id: input_boolean.home_assistant_restarted\nmode: single\n ",
+        "x": 980,
+        "y": 460,
         "wires": []
     }
 ]
